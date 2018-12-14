@@ -1,8 +1,8 @@
 import numpy, random
 
-# obtains the text from the file
+# obtains the text from the file and returns each word as an array
 def get_corpus():
-    corpus_string = "foo bar foo bar bar"
+    corpus_string = "I'm so sick of this Fake Love Fake Love Fake Love I'm so sorry but it's Fake Love Fake Love Fake Love"
     return corpus_string.split()
 
 # returns a list of all the distinct words in the original body of text
@@ -21,12 +21,13 @@ def get_unique_words(corpus_array):
 # returns a matrix that records the probability of a word occurring given that another word occurs
 def create_transition_matrix(unique_words, corpus_array):
     n = len(unique_words)
-    transition_matrix = numpy.ndarray((n, n))
+    transition_matrix = numpy.ndarray((n, n)) # 2 dimensional array
     word_count_corpus = len(corpus_array)
+    # each word in corpus_array has same index in transition_matrix (along rows, along columns)
 
     # initialize transition_matrix[n - 1], the row of the end of the line character, to a row of zeros
     # because no word can follow the end of the sentence
-    transition_matrix[n - 1] = numpy.zeros(n).tolist()
+    transition_matrix[n - 1] = numpy.zeros(n)
 
     # initialize transition_matrix[n - 1][n - 1] to 1
     # because the probability that the next character after the ending is the end is 1
@@ -48,8 +49,8 @@ def create_transition_matrix(unique_words, corpus_array):
                 if A_index != word_count_corpus - 1 and corpus_array[A_index + 1] == B:
                     word_count = word_count + 1
                 # if you are examining the last word in the sentence,
-                    # move on
-                    # because the probability of another word following it is 0 (check A_index != n)
+                    # do not increment the counter
+                    # because the probability of another word following it is 0
 
             # probability that the last word in the sentence is followed by the end is nonzero
             if B == '\n' and A == corpus_array[word_count_corpus - 1]:
@@ -66,8 +67,9 @@ def create_transition_matrix(unique_words, corpus_array):
 def predict_next_word(current_word, unique_words, transition_matrix):
     index = unique_words.index(current_word)
     # get index of current_word inside unique_words
-    # return row, whichever has highest probability wins
-
+    # the row of the transition matrix corresponding to the current word serves as a probability distribution
+    # the indices of the probability distribution correspond to those of unique_words
+    # numpy picks a word out of unique_words given the aforementioned probability distribution
     return numpy.random.choice(unique_words, 1, p=transition_matrix[index])
 
 # create an output of a certain length
@@ -77,6 +79,7 @@ def create_output(unique_words, transition_matrix):
     # randomly pick one word to start
     next_word = random.choice(unique_words)
     # first word should not be the end - would result in empty text generated
+    # keep generating text until you hit the end of word character - length is random
     while next_word == '\n':
         next_word = random.choice(unique_words)
     generated_text += next_word
