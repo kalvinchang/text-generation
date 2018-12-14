@@ -107,4 +107,7 @@ def text_generation(file_name):
     return generated_text
 
 #print(create_transition_matrix(get_unique_words(get_corpus()), get_corpus()))
+
+# replace file with desired input file
+# input file must be in same folder as this Python file
 print(text_generation("trump.txt"))
