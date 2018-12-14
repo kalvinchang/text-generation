@@ -2,7 +2,7 @@ import numpy, random, string
 
 # obtains the text from the file and returns each word as an array
 def get_corpus(filename):
-    file1 = open(filename, "r", encoding="utf8")
+    file1 = open(filename, "r", encoding="utf8") #,
     text = file1.read() # corpus as one long string
     return text.split(" ") # corpus as arrays (each word is its own element)
     # split by space only, not new line
@@ -76,7 +76,7 @@ def predict_next_word(current_word, unique_words, transition_matrix):
     # numpy picks a word out of unique_words given the aforementioned probability distribution
     return numpy.random.choice(unique_words, 1, p=transition_matrix[index])
 
-# create an output of a certain length
+# returns entire string of generated text by drawing successive words from unique_words with predict_next_word
 def create_output(unique_words, transition_matrix):
     text_list = []
     generated_text = ''
@@ -99,6 +99,7 @@ def create_output(unique_words, transition_matrix):
 
     return generated_text
 
+# the main function
 def text_generation(file_name):
     corpus = get_corpus(file_name)
     unique_words = get_unique_words(corpus)
@@ -106,8 +107,6 @@ def text_generation(file_name):
     generated_text = create_output(unique_words, transition_matrix)
     return generated_text
 
-#print(create_transition_matrix(get_unique_words(get_corpus()), get_corpus()))
-
 # replace file with desired input file
 # input file must be in same folder as this Python file
-print(text_generation("trump.txt"))
+print(text_generation("bts-fake-love.txt"))
