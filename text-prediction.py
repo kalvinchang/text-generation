@@ -67,20 +67,24 @@ def predict_next_word(current_word, unique_words, transition_matrix):
     index = unique_words.index(current_word)
     # get index of current_word inside unique_words
     # return row, whichever has highest probability wins
+
     return numpy.random.choice(unique_words, 1, p=transition_matrix[index])
 
 # create an output of a certain length
-def create_output(unique_words, transition_matrix, num_words):
+def create_output(unique_words, transition_matrix):
     text_list = []
     generated_text = ''
     # randomly pick one word to start
-    first_word = random.choice(unique_words)
-    generated_text += first_word
-    text_list.append(first_word)
+    next_word = random.choice(unique_words)
+    # first word should not be the end - would result in empty text generated
+    while next_word == '\n':
+        next_word = random.choice(unique_words)
+    generated_text += next_word
+    text_list.append(next_word)
 
-    for i in range(num_words):
+    while (next_word != '\n'):
         #print(generated_text)
-        next_word = predict_next_word(text_list[i], unique_words, transition_matrix)
+        next_word = predict_next_word(text_list[len(text_list) - 1], unique_words, transition_matrix)[0]
         generated_text += ' ' + next_word
         text_list.append(next_word)
 
@@ -90,8 +94,7 @@ def text_generation():
     corpus = get_corpus()
     unique_words = get_unique_words(corpus)
     transition_matrix = create_transition_matrix(unique_words, corpus)
-    num_words = 100
-    generated_text = create_output(unique_words, transition_matrix, num_words)
+    generated_text = create_output(unique_words, transition_matrix)
     return generated_text
 
 #print(create_transition_matrix(get_unique_words(get_corpus()), get_corpus()))
