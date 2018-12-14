@@ -1,9 +1,11 @@
 import numpy, random
 
 # obtains the text from the file and returns each word as an array
-def get_corpus():
+def get_corpus(filename):
+    file1 = open(filename, "r")
+    text = file1.read()
     corpus_string = "I'm so sick of this Fake Love Fake Love Fake Love I'm so sorry but it's Fake Love Fake Love Fake Love"
-    return corpus_string.split()
+    return text.split()
 
 # returns a list of all the distinct words in the original body of text
 def get_unique_words(corpus_array):
@@ -94,7 +96,7 @@ def create_output(unique_words, transition_matrix):
     return generated_text
 
 def text_generation():
-    corpus = get_corpus()
+    corpus = get_corpus("textFile.txt")
     unique_words = get_unique_words(corpus)
     transition_matrix = create_transition_matrix(unique_words, corpus)
     generated_text = create_output(unique_words, transition_matrix)
