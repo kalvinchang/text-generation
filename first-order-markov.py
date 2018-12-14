@@ -1,11 +1,11 @@
-import numpy, random
+import numpy, random, string
 
 # obtains the text from the file and returns each word as an array
 def get_corpus(filename):
-    file1 = open(filename, "r")
-    text = file1.read()
-    corpus_string = "I'm so sick of this Fake Love Fake Love Fake Love I'm so sorry but it's Fake Love Fake Love Fake Love"
-    return text.split()
+    file1 = open(filename, "r", encoding="utf8")
+    text = file1.read() # corpus as one long string
+    return text.split(" ") # corpus as arrays (each word is its own element)
+    # split by space only, not new line
 
 # returns a list of all the distinct words in the original body of text
 def get_unique_words(corpus_array):
@@ -17,6 +17,8 @@ def get_unique_words(corpus_array):
 
     # the end of the sentence is treated as the next line character
     unique_word_array.append('\n')
+    # capitalize first word automatically (assume it's the first word in a sentence)
+    unique_word_array[0].capitalize()
 
     return unique_word_array
 
@@ -78,8 +80,10 @@ def predict_next_word(current_word, unique_words, transition_matrix):
 def create_output(unique_words, transition_matrix):
     text_list = []
     generated_text = ''
-    # randomly pick one word to start
-    next_word = random.choice(unique_words)
+    # randomly pick one word that is capitalized to start
+    # len(word) > 0 prevents string index out of bounds access
+    capitalized_words = [word for word in unique_words if len(word) > 0 and word[0].isupper()]
+    next_word = random.choice(capitalized_words)
     # first word should not be the end - would result in empty text generated
     # keep generating text until you hit the end of word character - length is random
     while next_word == '\n':
@@ -87,7 +91,7 @@ def create_output(unique_words, transition_matrix):
     generated_text += next_word
     text_list.append(next_word)
 
-    while (next_word != '\n'):
+    while next_word != '\n':
         #print(generated_text)
         next_word = predict_next_word(text_list[len(text_list) - 1], unique_words, transition_matrix)[0]
         generated_text += ' ' + next_word
@@ -95,12 +99,12 @@ def create_output(unique_words, transition_matrix):
 
     return generated_text
 
-def text_generation():
-    corpus = get_corpus("textFile.txt")
+def text_generation(file_name):
+    corpus = get_corpus(file_name)
     unique_words = get_unique_words(corpus)
     transition_matrix = create_transition_matrix(unique_words, corpus)
     generated_text = create_output(unique_words, transition_matrix)
     return generated_text
 
 #print(create_transition_matrix(get_unique_words(get_corpus()), get_corpus()))
-print(text_generation())
+print(text_generation("trump.txt"))
