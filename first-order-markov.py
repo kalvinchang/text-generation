@@ -85,7 +85,7 @@ def create_output(unique_words, transition_matrix):
     capitalized_words = [word for word in unique_words if len(word) > 0 and word[0].isupper()]
     next_word = random.choice(capitalized_words)
     # first word should not be the end - would result in empty text generated
-    # keep generating text until you hit the end of word character - length is random
+    # keep generating text until you hit the end of line character - length is random
     while next_word == '\n':
         next_word = random.choice(unique_words)
     generated_text += next_word
@@ -94,6 +94,7 @@ def create_output(unique_words, transition_matrix):
     while next_word != '\n':
         #print(generated_text)
         next_word = predict_next_word(text_list[len(text_list) - 1], unique_words, transition_matrix)[0]
+        # take index 0 because numpy.random.choice returns the chosen element as a one-element array
         generated_text += ' ' + next_word
         text_list.append(next_word)
 
