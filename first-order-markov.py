@@ -37,8 +37,8 @@ def create_transition_matrix(unique_words, corpus_array):
     # because the probability that the next character after the ending is the end is 1
     transition_matrix[n - 1][n - 1] = 1
 
-    for row in range(n):        # index of A in P(A -> B)
-        for col in range(n):    # index of B in P(A -> B)
+    for row in range(n):        # index representing A in P(A -> B)
+        for col in range(n):    # index representing B in P(A -> B)
             # calculate P(B | A) = P(A -> B)
             word_count = 0
             A = unique_words[row] # word in question
