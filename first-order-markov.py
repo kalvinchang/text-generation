@@ -110,4 +110,4 @@ def text_generation(file_name):
 
 # replace file with desired input file
 # input file must be in same folder as this Python file
-print(text_generation("trump-incoherent.txt"))
+print(text_generation("hello-world.txt"))
